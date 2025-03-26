@@ -13,6 +13,13 @@ import {
   blobToBase64 
 } from '@/utils/speechUtils';
 
+type FeedbackStatus = 'inactive' | 'slow' | 'good' | 'fast';
+
+type FeedbackState = {
+  status: FeedbackStatus;
+  message: string;
+};
+
 const Index: React.FC = () => {
   // State for recording
   const [isRecording, setIsRecording] = useState(false);
@@ -21,7 +28,10 @@ const Index: React.FC = () => {
   
   // State for speech rate
   const [speechRate, setSpeechRate] = useState(0);
-  const [feedback, setFeedback] = useState({ status: 'inactive' as const, message: 'Esperando...' });
+  const [feedback, setFeedback] = useState<FeedbackState>({ 
+    status: 'inactive', 
+    message: 'Esperando...' 
+  });
   
   // State for visualization
   const [visualizationData, setVisualizationData] = useState<Uint8Array | undefined>(undefined);
@@ -56,7 +66,7 @@ const Index: React.FC = () => {
         
         // Update feedback based on speech rate
         const newFeedback = getSpeechRateFeedback(newRate);
-        setFeedback(newFeedback);
+        setFeedback(newFeedback as FeedbackState);
       }
     }, 200);
     
